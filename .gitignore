@@ -1,0 +1,11 @@
+.DS_Store
+.env
+.env.*
+private/
+raw-exports/
+*.app/
+*.dmg
+*.pkg
+*.pem
+*.p12
+*.key

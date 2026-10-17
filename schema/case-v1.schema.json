@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hideouts-io/EntitlementLens-Research/blob/main/schema/case-v1.schema.json",
+  "title": "EntitlementLens public research case v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "case_id",
+    "sample_kind",
+    "source_reference",
+    "artifact_label",
+    "artifact_sha256",
+    "collector",
+    "signature_integrity",
+    "entitlement_collection_state",
+    "architectures",
+    "evidence_scope",
+    "runtime_authorization"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "case_id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "maxLength": 100 },
+    "sample_kind": { "enum": ["controlled_fixture", "system_binary", "reviewed_scan"] },
+    "source_reference": { "type": "string", "minLength": 1, "maxLength": 140, "pattern": "^[A-Za-z0-9._ -]+$" },
+    "artifact_label": { "type": "string", "minLength": 1, "maxLength": 80, "pattern": "^[A-Za-z0-9._ -]+$" },
+    "artifact_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "collector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "source_commit", "feature_schema_version", "collected_at_utc", "host_macos_version", "host_macos_build"],
+      "properties": {
+        "name": { "const": "EntitlementLens" },
+        "source_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "feature_schema_version": { "type": "integer", "minimum": 1 },
+        "collected_at_utc": { "type": "string", "format": "date-time" },
+        "host_macos_version": { "type": "string", "pattern": "^[0-9]+(?:\\.[0-9]+){1,2}$" },
+        "host_macos_build": { "type": "string", "pattern": "^[A-Za-z0-9]+$" }
+      }
+    },
+    "signature_integrity": { "$ref": "#/$defs/signature_integrity" },
+    "entitlement_collection_state": { "$ref": "#/$defs/collection_state" },
+    "architectures": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": { "$ref": "#/$defs/architecture" }
+    },
+    "evidence_scope": { "const": "static_signed_declarations" },
+    "runtime_authorization": { "const": "not_assessed" }
+  },
+  "$defs": {
+    "signature_integrity": { "enum": ["valid", "invalid", "unsigned", "unavailable"] },
+    "collection_state": { "enum": ["complete", "partial", "not_collected", "unsupported", "unavailable", "not_applicable"] },
+    "architecture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "collection_state", "signature_integrity", "declarations"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[A-Za-z0-9_.]+$", "maxLength": 40 },
+        "collection_state": { "$ref": "#/$defs/collection_state" },
+        "signature_integrity": { "$ref": "#/$defs/signature_integrity" },
+        "declarations": { "type": "array", "maxItems": 256, "items": { "$ref": "#/$defs/declaration" } }
+      }
+    },
+    "declaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "value"],
+      "properties": {
+        "key": { "type": "string", "minLength": 1, "maxLength": 256, "pattern": "^[^\\r\\n]+$" },
+        "value": {
+          "oneOf": [
+            {
+              "type": "object", "additionalProperties": false,
+              "required": ["type", "boolean"],
+              "properties": { "type": { "const": "boolean" }, "boolean": { "type": "boolean" } }
+            },
+            {
+              "type": "object", "additionalProperties": false,
+              "required": ["type", "string"],
+              "properties": { "type": { "const": "string" }, "string": { "type": "string", "maxLength": 512 } }
+            },
+            {
+              "type": "object", "additionalProperties": false,
+              "required": ["type", "integer"],
+              "properties": { "type": { "const": "integer" }, "integer": { "type": "integer" } }
+            },
+            {
+              "type": "object", "additionalProperties": false,
+              "required": ["type", "real"],
+              "properties": { "type": { "const": "real" }, "real": { "type": "number" } }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

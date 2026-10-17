@@ -1,0 +1,40 @@
+{
+  "architectures": [
+    {
+      "collection_state": "complete",
+      "declarations": [],
+      "name": "x86_64",
+      "signature_integrity": "valid"
+    },
+    {
+      "collection_state": "complete",
+      "declarations": [],
+      "name": "arm64e",
+      "signature_integrity": "valid"
+    },
+    {
+      "collection_state": "complete",
+      "declarations": [],
+      "name": "arm64e.x1",
+      "signature_integrity": "valid"
+    }
+  ],
+  "artifact_label": "true",
+  "artifact_sha256": "511602b8cf083bdff74d43242b71c27484bd63121c07f3b59575d35676e1f6cb",
+  "case_id": "macos-true-26a428",
+  "collector": {
+    "collected_at_utc": "2026-10-17T18:47:24Z",
+    "feature_schema_version": 3,
+    "host_macos_build": "26A428",
+    "host_macos_version": "27.0",
+    "name": "EntitlementLens",
+    "source_commit": "a29639fe853c948adc05d649ed6960a487822aee"
+  },
+  "entitlement_collection_state": "complete",
+  "evidence_scope": "static_signed_declarations",
+  "runtime_authorization": "not_assessed",
+  "sample_kind": "system_binary",
+  "schema_version": 1,
+  "signature_integrity": "valid",
+  "source_reference": "macos-system-true"
+}
